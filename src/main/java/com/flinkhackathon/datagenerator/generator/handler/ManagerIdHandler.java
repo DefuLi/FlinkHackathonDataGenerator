@@ -11,13 +11,14 @@ import com.flinkhackathon.datagenerator.utils.RandomUtils;
  */
 public class ManagerIdHandler implements IBusinessHandler {
 
-    private static final int MANAGER_ID_MIN = 10;
+    private static final int MANAGER_ID_MIN = 1;
 
-    private static final int MANAGER_ID_MAX = 14;
+    private static final int MANAGER_ID_MAX = 3;
 
     @Override
     public void handle(BusinessDataBean businessDataBean) {
-        int managerId = RandomUtils.randomUniformGetId(MANAGER_ID_MIN, MANAGER_ID_MAX);
-        businessDataBean.setManagerId(managerId);
+        int managerIdPrefix = RandomUtils.randomUniformGetId(MANAGER_ID_MIN, MANAGER_ID_MAX);
+        String managerIdStr = String.valueOf(managerIdPrefix) + businessDataBean.getInstitutionId();
+        businessDataBean.setManagerId(Integer.parseInt(managerIdStr));
     }
 }

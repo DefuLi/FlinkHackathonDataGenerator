@@ -23,6 +23,7 @@ public class BusinessDataGenerator {
         BUSINESS_HANDLERS.add(new CreateTimeHandler());
         BUSINESS_HANDLERS.add(new AppointmentTimeHandler());
         BUSINESS_HANDLERS.add(new ManagerIdHandler());
+        BUSINESS_HANDLERS.add(new CompanyHandler());
     }
 
     /**
