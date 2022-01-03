@@ -1,20 +1,24 @@
 package com.flinkhackathon.datagenerator.speedcontroller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.flinkhackathon.datagenerator.constants.KafkaConstants;
-import com.flinkhackathon.datagenerator.constants.SpeedControllerConstants;
 import com.flinkhackathon.datagenerator.generator.BusinessDataGenerator;
 import com.flinkhackathon.datagenerator.kafka.KafkaClient;
 import com.flinkhackathon.datagenerator.kafka.KafkaFaced;
 import com.flinkhackathon.datagenerator.model.BusinessDataBean;
 import com.flinkhackathon.datagenerator.pravega.BusinessDataPravegaProducer;
+import com.flinkhackathon.datagenerator.producerfactory.IProducerFactory;
+import com.flinkhackathon.datagenerator.producerfactory.KafkaProducerFactory;
+import com.flinkhackathon.datagenerator.producerfactory.producer.IProducer;
 import com.flinkhackathon.datagenerator.utils.JsonUtils;
 import org.apache.kafka.clients.producer.KafkaProducer;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -25,25 +29,29 @@ import java.util.concurrent.ExecutionException;
  */
 @Component
 @EnableScheduling
-public class SendDataSpeedController {
-    private static final KafkaProducer<String, String> producer = KafkaClient.initKafkaProducer();
-
+public class SendDataSpeedController implements InitializingBean {
     @Value("${producer.type}")
     private String producerType;
 
+    @Value("${producer.speed}")
+    private int speed;
+
+    @Autowired
+    private List<IProducerFactory> producerFactoryList;
+
+    private IProducer producer;
+
     @Scheduled(cron = "*/1 * * * * ?")
     public void startCrazy() throws JsonProcessingException, ExecutionException, InterruptedException {
-        for (int i = 0; i < SpeedControllerConstants.SPEED_SECOND; i++) {
+        for (int i = 0; i < speed; i++) {
             BusinessDataBean businessDataBean = BusinessDataGenerator.buildBusinessData();
             String message = JsonUtils.writeValue(businessDataBean);
-            if (producerType.equals("kafka")) {
-                KafkaFaced.sendKafka(producer, message);
-            } else if (producerType.equals("pravega")) {
-                BusinessDataPravegaProducer.doWrite(message);
-            } else {
-                KafkaFaced.sendKafka(producer, message);
-                BusinessDataPravegaProducer.doWrite(message);
-            }
+            producer.sendMessage(message);
         }
+    }
+
+    @Override
+    public void afterPropertiesSet() {
+        this.producer = producerFactoryList.stream().filter(factoryItem -> factoryItem.isMatch(producerType)).findFirst().get().createProducer();
     }
 }

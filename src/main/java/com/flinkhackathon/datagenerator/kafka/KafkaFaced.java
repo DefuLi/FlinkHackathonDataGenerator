@@ -15,15 +15,16 @@ import org.slf4j.LoggerFactory;
 public class KafkaFaced {
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaFaced.class);
 
+    private static final KafkaProducer<String, String> PRODUCER = KafkaClient.initKafkaProducer();
+
     /**
      * 发送到Kafka
      *
-     * @param producer 生产者
-     * @param message  消息
+     * @param message 消息
      */
-    public static void sendKafka(KafkaProducer<String, String> producer, String message) {
+    public static void sendKafka(String message) {
         ProducerRecord<String, String> record = new ProducerRecord<>(KafkaConstants.TOPIC, message);
-        producer.send(record, (recordMetadata, e) -> {
+        PRODUCER.send(record, (recordMetadata, e) -> {
             if (recordMetadata != null) {
                 LOGGER.info("send message success! topic:{}, message:{}", KafkaConstants.TOPIC, message);
             } else {
