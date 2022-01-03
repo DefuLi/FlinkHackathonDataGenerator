@@ -10,9 +10,9 @@ import com.flinkhackathon.datagenerator.utils.RandomUtils;
  * @since 2022/1/2 10:26
  */
 public class InstitutionIdHandler implements IBusinessHandler {
-    private static final int INSTITUTION_ID_MIN = 10;
+    private static final int INSTITUTION_ID_MIN = 11;
 
-    private static final int INSTITUTION_ID_MAX = 20;
+    private static final int INSTITUTION_ID_MAX = 40;
 
     @Override
     public void handle(BusinessDataBean businessDataBean) {

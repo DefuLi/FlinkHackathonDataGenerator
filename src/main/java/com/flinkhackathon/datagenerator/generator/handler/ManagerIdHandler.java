@@ -11,9 +11,9 @@ import com.flinkhackathon.datagenerator.utils.RandomUtils;
  */
 public class ManagerIdHandler implements IBusinessHandler {
 
-    private static final int MANAGER_ID_MIN = 100000;
+    private static final int MANAGER_ID_MIN = 10;
 
-    private static final int MANAGER_ID_MAX = 200000;
+    private static final int MANAGER_ID_MAX = 14;
 
     @Override
     public void handle(BusinessDataBean businessDataBean) {

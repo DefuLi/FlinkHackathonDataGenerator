@@ -58,7 +58,7 @@ public class BusinessDataPravegaProducer {
     public static void doWrite(String message) throws ExecutionException, InterruptedException {
 
         CompletableFuture<Void> writeFuture = WRITER.writeEvent(message);
-//            writeFuture.get();
+        writeFuture.get();
         LOGGER.info("write message success! message:{}", message);
 
     }
