@@ -26,22 +26,13 @@ import java.util.concurrent.ExecutionException;
 public class BusinessDataPravegaProducer {
     private static final Logger LOGGER = LoggerFactory.getLogger(BusinessDataPravegaProducer.class);
 
-    private static final BusinessDataPravegaProducer INSTANCE = new BusinessDataPravegaProducer();
+    private static final EventStreamWriter<String> WRITER;
 
-    private BusinessDataPravegaProducer() {
-
+    static {
+        WRITER = initProducer();
     }
 
-    /**
-     * 获取生产者单例
-     *
-     * @return 生产者
-     */
-    public static BusinessDataPravegaProducer getInstance() {
-        return INSTANCE;
-    }
-
-    public static void doWrite(String message) throws ExecutionException, InterruptedException {
+    private static EventStreamWriter<String> initProducer() {
         StreamManager streamManager = StreamManager.create(URI.create(PravegaConstants.CONTROLLER_URI));
 
         final boolean scopeCreation = streamManager.createScope(PravegaConstants.SCOPE);
@@ -55,15 +46,21 @@ public class BusinessDataPravegaProducer {
         if (streamCreation) {
             LOGGER.info("create stream success!");
         }
-        try (EventStreamClientFactory clientFactory = EventStreamClientFactory.withScope(PravegaConstants.SCOPE,
+        EventStreamClientFactory clientFactory = EventStreamClientFactory.withScope(PravegaConstants.SCOPE,
                 ClientConfig.builder().controllerURI(URI.create(PravegaConstants.CONTROLLER_URI)).build());
-             EventStreamWriter<String> writer = clientFactory.createEventWriter(PravegaConstants.STREAM_NAME,
-                     new UTF8StringSerializer(),
-                     EventWriterConfig.builder().build())) {
-            CompletableFuture<Void> writeFuture = writer.writeEvent(message);
-            writeFuture.get();
-            LOGGER.info("write message success! message:{}", message);
-        }
+        EventStreamWriter<String> writer = clientFactory.createEventWriter(PravegaConstants.STREAM_NAME,
+                new UTF8StringSerializer(),
+                EventWriterConfig.builder().build());
+
+        return writer;
+    }
+
+    public static void doWrite(String message) throws ExecutionException, InterruptedException {
+
+        CompletableFuture<Void> writeFuture = WRITER.writeEvent(message);
+//            writeFuture.get();
+        LOGGER.info("write message success! message:{}", message);
+
     }
 
 }
