@@ -1,7 +1,6 @@
 package com.flinkhackathon.datagenerator.producerfactory.producer;
 
 import com.flinkhackathon.datagenerator.kafka.KafkaFaced;
-import com.flinkhackathon.datagenerator.producerfactory.producer.IProducer;
 
 /**
  * Kafka作为生产者

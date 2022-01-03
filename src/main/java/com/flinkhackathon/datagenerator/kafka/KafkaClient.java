@@ -1,7 +1,6 @@
 package com.flinkhackathon.datagenerator.kafka;
 
 import com.flinkhackathon.datagenerator.constants.KafkaConstants;
-import com.flinkhackathon.datagenerator.model.BusinessDataBean;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;

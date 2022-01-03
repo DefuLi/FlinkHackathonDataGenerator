@@ -2,15 +2,10 @@ package com.flinkhackathon.datagenerator.speedcontroller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.flinkhackathon.datagenerator.generator.BusinessDataGenerator;
-import com.flinkhackathon.datagenerator.kafka.KafkaClient;
-import com.flinkhackathon.datagenerator.kafka.KafkaFaced;
 import com.flinkhackathon.datagenerator.model.BusinessDataBean;
-import com.flinkhackathon.datagenerator.pravega.BusinessDataPravegaProducer;
 import com.flinkhackathon.datagenerator.producerfactory.IProducerFactory;
-import com.flinkhackathon.datagenerator.producerfactory.KafkaProducerFactory;
 import com.flinkhackathon.datagenerator.producerfactory.producer.IProducer;
 import com.flinkhackathon.datagenerator.utils.JsonUtils;
-import org.apache.kafka.clients.producer.KafkaProducer;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
