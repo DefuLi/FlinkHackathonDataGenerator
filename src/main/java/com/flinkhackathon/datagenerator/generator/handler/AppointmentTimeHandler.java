@@ -14,7 +14,7 @@ import java.util.Date;
 public class AppointmentTimeHandler implements IBusinessHandler {
     private static final String APPOINTMENT_TIME_BEGIN = "2022-01-03";
 
-    private static final String APPOINTMENT_TIME_END = "2022-01-05";
+    private static final String APPOINTMENT_TIME_END = "2022-01-15";
 
     @Override
     public void handle(BusinessDataBean businessDataBean) {
